@@ -16,9 +16,6 @@ except ImportError:
 def play_sound(sound_type: str = "type") -> None:
     """
     Memainkan suara terminal sederhana.
-    
-    Args:
-        sound_type: "type" untuk suara ketikan, "complete" untuk suara proses selesai.
     """
     if HAS_WINSOUND:
         try:
@@ -70,13 +67,13 @@ def show_random_events() -> None:
         sys.stdout.write(f"[STATUS] {event}")
         sys.stdout.flush()
         for _ in range(3):
-            time.sleep(random.uniform(0.2, 0.4))
+            time.sleep(random.uniform(0.1, 0.3))
             sys.stdout.write(".")
             sys.stdout.flush()
             play_sound("type")
         print(" [BERHASIL]")
         play_sound("complete")
-        time.sleep(random.uniform(0.1, 0.3))
+        time.sleep(random.uniform(0.1, 0.2))
 
 
 def progress_bar(label: str, bar_length: int = 40) -> None:
@@ -96,11 +93,11 @@ def progress_bar(label: str, bar_length: int = 40) -> None:
             play_sound("type")
             
         if i < 30:
-            time.sleep(random.uniform(0.01, 0.04))
+            time.sleep(random.uniform(0.01, 0.03))
         elif i < 70:
-            time.sleep(random.uniform(0.02, 0.08))
+            time.sleep(random.uniform(0.02, 0.06))
         else:
-            time.sleep(random.uniform(0.05, 0.15))
+            time.sleep(random.uniform(0.04, 0.1))
             
     print()
     play_sound("complete")
@@ -164,39 +161,73 @@ def boot_sequence() -> None:
 
     for pesan in pesan_boot:
         type_writer(pesan, speed=0.01)
-        time.sleep(random.uniform(0.1, 0.2))
+        time.sleep(random.uniform(0.05, 0.15))
 
 
-def main() -> None:
+def run_hacking_simulation(target: str) -> None:
     """
-    Titik masuk utama untuk Simulator Hacker Terminal.
+    Menjalankan simulasi hacking terhadap target tertentu.
     """
-    if sys.platform == "win32":
-        os.system('color')
-
-    type_writer(">>> GHOST SHELL OS v1.2.0 INITIATED", speed=0.03)
-    print("=" * 60)
-    boot_sequence()
+    print("\n" + "=" * 60)
+    type_writer(f"Menginisialisasi serangan ke: {target}", speed=0.04)
     print("=" * 60)
     
-    time.sleep(0.8)
-    type_writer("Target Terdeteksi: 10.0.4.129 [Central Datacenter]", speed=0.04)
+    time.sleep(0.5)
+    show_random_events()
+    progress_bar("MENJEBOL PERTAHANAN KERNEL")
     
     show_random_events()
-    progress_bar("MENGEKSTRAKSI SESSION KEYS")
-    
-    show_random_events()
-    progress_bar("MENGUNDUH CORE DATASET")
+    progress_bar("MENGUNDUH REGISTRI RAHASIA")
     
     print("-" * 60)
     type_writer("Proses selesai. Menganalisis hasil akhir...", speed=0.05)
     time.sleep(1.0)
     
     display_outcome()
-    
     print("-" * 60)
-    type_writer("Memutus koneksi secara aman...", speed=0.03)
-    print("Sesi ditutup.")
+    time.sleep(1.0)
+
+
+def main() -> None:
+    """
+    Titik masuk utama untuk Simulator Hacker Terminal dengan menu interaktif.
+    """
+    if sys.platform == "win32":
+        os.system('color')
+
+    # Pembersihan layar awal
+    os.system('cls' if sys.platform == 'win32' else 'clear')
+
+    type_writer(">>> GHOST SHELL OS v1.3.0 INITIATED", speed=0.03)
+    print("=" * 60)
+    boot_sequence()
+    print("=" * 60)
+    time.sleep(0.5)
+
+    target_saat_ini = "10.0.4.129 [Central Datacenter]"
+    
+    while True:
+        print(f"\n[SISTEM SIAP] - Target Saat Ini: {target_saat_ini}")
+        print("1. Mulai Peretasan (Start Hack)")
+        print("2. Ganti Target (Change Target)")
+        print("3. Keluar (Exit)")
+        
+        pilihan = input("\nGhostShell> ").strip()
+        
+        if pilihan == "1":
+            run_hacking_simulation(target_saat_ini)
+        elif pilihan == "2":
+            type_writer("Masukkan alamat target baru: ", speed=0.03, sound=True)
+            target_saat_ini = input("Target: ").strip()
+            if not target_saat_ini:
+                target_saat_ini = "Unknown Host"
+            type_writer(f"Target diubah menjadi: {target_saat_ini}", speed=0.03)
+        elif pilihan == "3":
+            type_writer("Memutuskan koneksi secara aman...", speed=0.03)
+            print("Sesi ditutup. Sampai jumpa, Hacker.")
+            break
+        else:
+            print("[ERROR] Perintah tidak dikenal. Silakan pilih 1-3.")
 
 
 if __name__ == "__main__":
