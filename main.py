@@ -3,6 +3,9 @@ import random
 import sys
 import os
 
+VERSION = "1.5.0"
+SYSTEM_NAME = "GHOST SHELL OS"
+
 try:
     if sys.platform == "win32":
         import winsound
@@ -12,223 +15,202 @@ try:
 except ImportError:
     HAS_WINSOUND = False
 
+# ANSI Color Codes
+CLR_RESET = "\033[0m"
+CLR_GREEN = "\033[92m"
+CLR_RED   = "\033[91m"
+CLR_CYAN  = "\033[96m"
+CLR_BOLD  = "\033[1m"
 
-def play_sound(sound_type: str = "type") -> None:
-    """
-    Memainkan suara terminal sederhana.
-    """
+# --- UTILITAS TERMINAL ---
+
+def clear_screen() -> None:
+    """Membersihkan layar terminal."""
+    os.system('cls' if sys.platform == 'win32' else 'clear')
+
+def init_terminal() -> None:
+    """Mengaktifkan dukungan warna di Windows."""
+    if sys.platform == "win32":
+        os.system('color')
+
+def play_audio(tipe: str = "ketik") -> None:
+    """Memainkan audio sederhana untuk feedback terminal."""
     if HAS_WINSOUND:
         try:
-            if sound_type == "type":
-                winsound.Beep(random.randint(600, 800), 10)
-            elif sound_type == "complete":
+            if tipe == "ketik":
+                winsound.Beep(random.randint(700, 900), 10)
+            elif tipe == "selesai":
                 winsound.Beep(1000, 100)
                 winsound.Beep(1200, 150)
         except Exception:
             pass
-    else:
-        if sound_type == "complete":
-            sys.stdout.write("\a")
-            sys.stdout.flush()
-
-
-def type_writer(text: str, speed: float = 0.04, sound: bool = True) -> None:
-    """
-    Menampilkan teks dengan efek mesin tik dan suara.
-    """
-    for char in text:
-        sys.stdout.write(char)
+    elif tipe == "selesai":
+        sys.stdout.write("\a") # ASCII Bell
         sys.stdout.flush()
-        if sound and char != " ":
-            play_sound("type")
-        time.sleep(speed)
+
+def efek_mesin_tik(teks: str, kecepatan: float = 0.04, suara: bool = True) -> None:
+    """Menampilkan teks karakter demi karakter dengan suara."""
+    for karakter in teks:
+        sys.stdout.write(karakter)
+        sys.stdout.flush()
+        if suara and karakter != " ":
+            play_audio("ketik")
+        time.sleep(kecepatan)
     print()
 
+def tampilkan_garis(panjang: int = 60, karakter: str = "=") -> None:
+    """Menampilkan garis pembatas di terminal."""
+    print(karakter * panjang)
 
-def show_random_events() -> None:
-    """
-    Menampilkan peristiwa hacking acak.
-    """
-    events = [
-        "Melewati firewall lapisan 3...",
-        "Mendekripsi paket data incoming...",
-        "Meningkatkan hak akses (Privilege Escalation)...",
-        "Menghapus jejak log sistem...",
-        "Mengalihkan rute traffic melalui proxy...",
-        "Menembus enkripsi WPA3...",
-        "Menginjeksi payload ke buffer...",
-        "Sinkronisasi dengan satelit uplink..."
+# --- MODUL SIMULASI ---
+
+def urutan_booting() -> None:
+    """Simulasi proses booting sistem OS palsu."""
+    tahapan = [
+        "Memuat modul kernel tingkat rendah...",
+        "Memasang volume file sistem terenkripsi...",
+        "Menghubungkan ke jaringan proxy global...",
+        "Menyiapkan lapisan firewall virtual...",
+        "Memverifikasi integritas Ghost Shell..."
+    ]
+    for pesan in tahapan:
+        efek_mesin_tik(f"[INFO] {pesan}", kecepatan=0.01)
+        time.sleep(random.uniform(0.1, 0.3))
+    print(f"{CLR_GREEN}Sistem Berhasil Dimuat. Selamat Datang.{CLR_RESET}")
+
+def tampilkan_event_acak() -> None:
+    """Menampilkan aktivitas hacker acak untuk efek visual."""
+    daftar_event = [
+        "Mendekripsi paket data SSH...",
+        "Bypass otentikasi biometrik...",
+        "Eskalasi hak akses administrator...",
+        "Menghapus jejak log akses...",
+        "Injeksi payload SQL...",
+        "Membuka portal backdoor..."
     ]
     
-    jumlah_event = random.randint(2, 4)
-    selected_events = random.sample(events, jumlah_event)
-    
-    for event in selected_events:
+    selected = random.sample(daftar_event, random.randint(2, 4))
+    for event in selected:
         sys.stdout.write(f"[STATUS] {event}")
         sys.stdout.flush()
         for _ in range(3):
-            time.sleep(random.uniform(0.1, 0.3))
+            time.sleep(random.uniform(0.1, 0.4))
             sys.stdout.write(".")
             sys.stdout.flush()
-            play_sound("type")
-        print(" [BERHASIL]")
-        play_sound("complete")
-        time.sleep(random.uniform(0.1, 0.2))
+            play_audio("ketik")
+        print(f" {CLR_GREEN}[BERHASIL]{CLR_RESET}")
+        play_audio("selesai")
+        time.sleep(0.2)
 
-
-def progress_bar(label: str, bar_length: int = 40) -> None:
-    """
-    Menampilkan progress bar modern.
-    """
-    sys.stdout.write(f"\n{label}\n")
+def bar_progres(label: str, panjang: int = 40) -> None:
+    """Progress bar modern dengan animasi di satu baris."""
+    print(f"\n{CLR_BOLD}{label}{CLR_RESET}")
     for i in range(101):
-        filled = int(round(bar_length * i / 100))
-        percent = i
-        bar = '█' * filled + '░' * (bar_length - filled)
-        
-        sys.stdout.write(f'\r[{bar}] {percent}% ')
+        terisi = int(round(panjang * i / 100))
+        bar = '█' * terisi + '░' * (panjang - terisi)
+        sys.stdout.write(f'\r[{bar}] {i}% ')
         sys.stdout.flush()
         
         if i % 10 == 0:
-            play_sound("type")
+            play_audio("ketik")
             
-        if i < 30:
-            time.sleep(random.uniform(0.01, 0.03))
-        elif i < 70:
-            time.sleep(random.uniform(0.02, 0.06))
+        # Variasi kecepatan biar terasa nyata
+        if i < 40:
+            time.sleep(random.uniform(0.01, 0.04))
+        elif i < 85:
+            time.sleep(random.uniform(0.03, 0.09))
         else:
-            time.sleep(random.uniform(0.04, 0.1))
-            
+            time.sleep(random.uniform(0.1, 0.2))
     print()
-    play_sound("complete")
+    play_audio("selesai")
 
-
-def display_outcome() -> None:
-    """
-    Menampilkan hasil akhir hacking secara acak.
-    """
-    outcomes = [
+def hasil_akhir() -> None:
+    """Menampilkan hasil acak dari operasi hacking."""
+    opsi = [
         {
-            "color": "\033[92m", # Hijau
-            "text": """
-   _   ___ ___ ___ ___ ___    ___ ___   _   _  _ _____ ___ ___ 
-  /_\ / __/ __| __/ __/ __|  / __| _ \ /_\ | \| |_   _| __|   \\
- / _ \ (_| (__| _|\__ \__ \ | (_ |   // _ \| .` | | | | _|| |) |
-/_/ \_\___\___|___|___/___/  \___|_|_/_/ \_\_|\_| |_| |___|___/ 
-            """,
-            "message": "AKSES DIBERIKAN: Kendali penuh sistem diperoleh."
+            "warna": CLR_GREEN,
+            "art": "   ACCESS GRANTED   ",
+            "msg": "Akses penuh didapatkan. Semua sistem di bawah kendali."
         },
         {
-            "color": "\033[96m", # Cyan
-            "text": """
- _____ _   ___ ___ ___ _____    ___ ___  __  __ ___ ___  ___  __  __ ___ ___ ___ ___ 
-|_   _/_\ | _ \ __| __|_   _|  / __/ _ \|  \/  | _ \ _ \/ _ \|  \/  |_ _/ __| __|   \\
-  | |/ _ \|   / _|| _|  | |   | (_| (_) | |\/| |  _/   / (_) | |\/| || | (__| _|| |) |
-  |_/_/ \_\_|_|___|___| |_|    \___\___/|_|  |_|_| |_|_\\___/|_|  |_|___\___|___|___/ 
-            """,
-            "message": "TARGET KOMPROMIS: Data berhasil diekstraksi ke server pusat."
+            "warna": CLR_CYAN,
+            "art": " TARGET COMPROMISED ",
+            "msg": "Data berhasil diekstrak. Target tidak menyadari serangan."
         },
         {
-            "color": "\033[91m", # Merah
-            "text": """
- _____ ___   _   ___ ___   ___  ___ _____ ___ ___ _____ ___ ___  
-|_   _| _ \ /_\ / __| __| |   \| __|_   _| __/ __|_   _| __|   \\ 
-  | | |   // _ \ (__| _|  | |) | _|  | | | _| (__  | | | _|| |) |
-  |_| |_|_/_/ \_\___\___| |___/|___| |_| |___\___| |_| |___|___/ 
-            """,
-            "message": "JEJAK TERDETEKSI: Mematikan koneksi darurat... Evakuasi data gagal!"
+            "warna": CLR_RED,
+            "art": "  TRACE DETECTED!   ",
+            "msg": "Koneksi terdeteksi oleh admin! Menghancurkan sesi darurat..."
         }
     ]
     
-    res = random.choice(outcomes)
-    print(f"\n{res['color']}{res['text']}\033[0m")
-    play_sound("complete")
-    type_writer(res['message'], speed=0.04)
+    hasil = random.choice(opsi)
+    tampilkan_garis(karakter="-")
+    print(f"\n{hasil['warna']}{CLR_BOLD}{hasil['art']}{CLR_RESET}")
+    efek_mesin_tik(hasil['msg'], kecepatan=0.04)
 
+# --- ALUR UTAMA ---
 
-def boot_sequence() -> None:
-    """
-    Menampilkan urutan booting sistem palsu.
-    """
-    pesan_boot = [
-        "Memuat modul kernel...",
-        "Memasang volume aman...",
-        "Membangun saluran enkripsi...",
-        "Memverifikasi integritas sistem...",
-        "Menginisialisasi firewall...",
-        "Sistem online."
-    ]
-
-    for pesan in pesan_boot:
-        type_writer(pesan, speed=0.01)
-        time.sleep(random.uniform(0.05, 0.15))
-
-
-def run_hacking_simulation(target: str) -> None:
-    """
-    Menjalankan simulasi hacking terhadap target tertentu.
-    """
-    print("\n" + "=" * 60)
-    type_writer(f"Menginisialisasi serangan ke: {target}", speed=0.04)
-    print("=" * 60)
+def simulasi_hacking(target: str) -> None:
+    """Menjalankan skenario hacking lengkap ke target."""
+    clear_screen()
+    tampilkan_garis()
+    efek_mesin_tik(f"MENGINISIALISASI SERANGAN KE: {target}", kecepatan=0.05)
+    tampilkan_garis()
     
     time.sleep(0.5)
-    show_random_events()
-    progress_bar("MENJEBOL PERTAHANAN KERNEL")
+    tampilkan_event_acak()
+    bar_progres("MENGUNDUH BASIS DATA INTI")
     
-    show_random_events()
-    progress_bar("MENGUNDUH REGISTRI RAHASIA")
+    tampilkan_event_acak()
+    bar_progres("MENEMBUS PROTOKOL ENKRIPSI")
     
-    print("-" * 60)
-    type_writer("Proses selesai. Menganalisis hasil akhir...", speed=0.05)
     time.sleep(1.0)
-    
-    display_outcome()
-    print("-" * 60)
-    time.sleep(1.0)
-
+    hasil_akhir()
+    tampilkan_garis(karakter="-")
+    input("\nTekan ENTER untuk kembali ke menu...")
 
 def main() -> None:
-    """
-    Titik masuk utama untuk Simulator Hacker Terminal dengan menu interaktif.
-    """
-    if sys.platform == "win32":
-        os.system('color')
-
-    # Pembersihan layar awal
-    os.system('cls' if sys.platform == 'win32' else 'clear')
-
-    type_writer(">>> GHOST SHELL OS v1.3.0 INITIATED", speed=0.03)
-    print("=" * 60)
-    boot_sequence()
-    print("=" * 60)
+    """Entry point utama aplikasi."""
+    init_terminal()
+    clear_screen()
+    
+    efek_mesin_tik(f">>> {SYSTEM_NAME} v{VERSION} DIMULAI", kecepatan=0.03)
+    tampilkan_garis()
+    urutan_booting()
+    tampilkan_garis()
     time.sleep(0.5)
 
-    target_saat_ini = "10.0.4.129 [Central Datacenter]"
+    target_saat_ini = "192.168.1.100 [Mainframe Bank]"
     
     while True:
-        print(f"\n[SISTEM SIAP] - Target Saat Ini: {target_saat_ini}")
-        print("1. Mulai Peretasan (Start Hack)")
-        print("2. Ganti Target (Change Target)")
-        print("3. Keluar (Exit)")
+        clear_screen()
+        print(f"{CLR_CYAN}--- {SYSTEM_NAME} MENU ---{CLR_RESET}")
+        print(f"Target Terkunci: {CLR_RED}{target_saat_ini}{CLR_RESET}")
+        print("-" * 30)
+        print("1. Jalankan Serangan (Execute Hack)")
+        print("2. Ubah Target (Modify Target)")
+        print("3. Matikan Terminal (Shutdown)")
         
         pilihan = input("\nGhostShell> ").strip()
         
         if pilihan == "1":
-            run_hacking_simulation(target_saat_ini)
+            simulasi_hacking(target_saat_ini)
         elif pilihan == "2":
-            type_writer("Masukkan alamat target baru: ", speed=0.03, sound=True)
-            target_saat_ini = input("Target: ").strip()
-            if not target_saat_ini:
-                target_saat_ini = "Unknown Host"
-            type_writer(f"Target diubah menjadi: {target_saat_ini}", speed=0.03)
+            efek_mesin_tik("Masukkan Host/IP Baru: ", suara=False)
+            baru = input("Target: ").strip()
+            target_saat_ini = baru if baru else "Unknown Host"
         elif pilihan == "3":
-            type_writer("Memutuskan koneksi secara aman...", speed=0.03)
-            print("Sesi ditutup. Sampai jumpa, Hacker.")
+            efek_mesin_tik("Mematikan semua modul dan menghapus jejak...", kecepatan=0.02)
+            print("Terminal ditutup secara aman.")
             break
         else:
-            print("[ERROR] Perintah tidak dikenal. Silakan pilih 1-3.")
-
+            print(f"{CLR_RED}[!] Perintah tidak valid.{CLR_RESET}")
+            time.sleep(1)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nSesi diputus paksa.")
+        sys.exit()
