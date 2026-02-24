@@ -1,22 +1,56 @@
 import time
 import random
 import sys
+import os
+
+try:
+    if sys.platform == "win32":
+        import winsound
+        HAS_WINSOUND = True
+    else:
+        HAS_WINSOUND = False
+except ImportError:
+    HAS_WINSOUND = False
 
 
-def type_writer(text: str, speed: float = 0.04) -> None:
+def play_sound(sound_type: str = "type") -> None:
     """
-    Menampilkan teks dengan efek mesin tik (per karakter).
+    Memainkan suara terminal sederhana.
+    
+    Args:
+        sound_type: "type" untuk suara ketikan, "complete" untuk suara proses selesai.
+    """
+    if HAS_WINSOUND:
+        try:
+            if sound_type == "type":
+                winsound.Beep(random.randint(600, 800), 10)
+            elif sound_type == "complete":
+                winsound.Beep(1000, 100)
+                winsound.Beep(1200, 150)
+        except Exception:
+            pass
+    else:
+        if sound_type == "complete":
+            sys.stdout.write("\a")
+            sys.stdout.flush()
+
+
+def type_writer(text: str, speed: float = 0.04, sound: bool = True) -> None:
+    """
+    Menampilkan teks dengan efek mesin tik dan suara.
     """
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
+        if sound and char != " ":
+            play_sound("type")
         time.sleep(speed)
     print()
 
 
 def show_random_events() -> None:
     """
-    Menampilkan peristiwa hacking acak untuk memberikan kesan sistem sedang bekerja keras.
+    Menampilkan peristiwa hacking acak.
     """
     events = [
         "Melewati firewall lapisan 3...",
@@ -36,16 +70,18 @@ def show_random_events() -> None:
         sys.stdout.write(f"[STATUS] {event}")
         sys.stdout.flush()
         for _ in range(3):
-            time.sleep(random.uniform(0.2, 0.5))
+            time.sleep(random.uniform(0.2, 0.4))
             sys.stdout.write(".")
             sys.stdout.flush()
+            play_sound("type")
         print(" [BERHASIL]")
-        time.sleep(random.uniform(0.1, 0.4))
+        play_sound("complete")
+        time.sleep(random.uniform(0.1, 0.3))
 
 
 def progress_bar(label: str, bar_length: int = 40) -> None:
     """
-    Menampilkan progress bar modern yang diperbarui di satu baris.
+    Menampilkan progress bar modern.
     """
     sys.stdout.write(f"\n{label}\n")
     for i in range(101):
@@ -56,6 +92,9 @@ def progress_bar(label: str, bar_length: int = 40) -> None:
         sys.stdout.write(f'\r[{bar}] {percent}% ')
         sys.stdout.flush()
         
+        if i % 10 == 0:
+            play_sound("type")
+            
         if i < 30:
             time.sleep(random.uniform(0.01, 0.04))
         elif i < 70:
@@ -64,11 +103,12 @@ def progress_bar(label: str, bar_length: int = 40) -> None:
             time.sleep(random.uniform(0.05, 0.15))
             
     print()
+    play_sound("complete")
 
 
 def display_outcome() -> None:
     """
-    Menampilkan hasil akhir hacking secara acak dengan ASCII art dan warna.
+    Menampilkan hasil akhir hacking secara acak.
     """
     outcomes = [
         {
@@ -105,6 +145,7 @@ def display_outcome() -> None:
     
     res = random.choice(outcomes)
     print(f"\n{res['color']}{res['text']}\033[0m")
+    play_sound("complete")
     type_writer(res['message'], speed=0.04)
 
 
@@ -122,7 +163,7 @@ def boot_sequence() -> None:
     ]
 
     for pesan in pesan_boot:
-        type_writer(pesan, speed=0.015)
+        type_writer(pesan, speed=0.01)
         time.sleep(random.uniform(0.1, 0.2))
 
 
@@ -131,10 +172,9 @@ def main() -> None:
     Titik masuk utama untuk Simulator Hacker Terminal.
     """
     if sys.platform == "win32":
-        import os
         os.system('color')
 
-    type_writer(">>> GHOST SHELL OS v1.1.0 INITIATED", speed=0.03)
+    type_writer(">>> GHOST SHELL OS v1.2.0 INITIATED", speed=0.03)
     print("=" * 60)
     boot_sequence()
     print("=" * 60)
@@ -150,7 +190,7 @@ def main() -> None:
     
     print("-" * 60)
     type_writer("Proses selesai. Menganalisis hasil akhir...", speed=0.05)
-    time.sleep(1.5)
+    time.sleep(1.0)
     
     display_outcome()
     
