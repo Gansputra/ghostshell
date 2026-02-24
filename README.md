@@ -2,7 +2,7 @@
 
 Simulator terminal "hacker" berbasis Python yang dirancang untuk hiburan dan keperluan sinematik. Program ini memberikan atmosfer peretasan profesional dengan animasi teks, suara, dan progress bar.
 
-## 🚀 Fitur Utama
+## Fitur Utama
 - **Cinematic Boot Sequence**: Simulasi proses pemuatan OS hacker.
 - **Interactive Menu**: Navigasi mudah untuk memulai peretasan atau mengganti target.
 - **Typewriter Effect**: Teks muncul karakter demi karakter seperti di terminal asli.
@@ -11,11 +11,11 @@ Simulator terminal "hacker" berbasis Python yang dirancang untuk hiburan dan kep
 - **Terminal Sound Effects**: Bunyi bip terminal saat mengetik dan saat proses selesai (Windows).
 - **Random Outcomes**: Hasil akhir yang tidak terduga (Access Granted/Denied).
 
-## 🛠️ Persyaratan
+## Persyaratan
 - **Python 3.13** (Direkomendasikan)
 - OS: Windows (untuk dukungan suara penuh), Linux, atau macOS.
 
-## 💻 Cara Menjalankan
+## Cara Menjalankan
 1. Pastikan Anda sudah menginstal Python.
 2. Buka terminal atau Command Prompt di direktori proyek.
 3. Jalankan perintah berikut:
@@ -23,9 +23,17 @@ Simulator terminal "hacker" berbasis Python yang dirancang untuk hiburan dan kep
    python main.py
    ```
 
-## ⚠️ Pernyataan Penting (Disclaimer)
+## Pernyataan Penting (Disclaimer)
 **Proyek ini hanyalah simulasi visual untuk tujuan hiburan saja.** 
 Program ini **TIDAK** melakukan aktivitas peretasan nyata, tidak mengakses data ilegal, dan tidak membahayakan sistem komputer mana pun. Gunakan hanya untuk bercanda dengan teman atau sebagai properti video.
 
 ---
-**Dibuat dengan ❤️ menggunakan Python Modern.**
+## Connect with Me
+
+- **YouTube**: [gexvexedit](https://youtube.com/@gexvexedit)
+- **Pinterest**: [Gansputra](https://pin.it/o8f9moE93)
+- **GitHub**: [gansputra](https://github.com/gansputra)
+
+---
+
+Developed with ❤️ by Gansputra :).
